@@ -92,9 +92,25 @@ router.get('/course', async (req, res) => {
     }
 })
 
-router.post('/courseimg', fileUpload(path.join(__dirname, '../client/assets/uploads/courseimg/')).single('courseimg'), async (req, res) => {
+
+router.post('/course/subject/newsubject', fileUpload(path.join(__dirname, '../client/assets/uploads/courseimg/')).single('newsubimg'), async (req, res) => {
+    console.log(req.body)
     console.log(req.file)
-    return res.json({msg:'File uploaded', result:req.file.filename, dist:__dirname + '../client/assets/uploads/courseimg/'})
+    return res.json({msg:'Subjects successfully added in ' + req.body.course})
+    try{
+        let newsubject = new Subjects({
+            
+        })
+    }catch(err){
+        return res.status(404).json({msg:err})
+    }
+})
+
+
+//SINGE FILE UPLOAD 
+router.post('/singleupaload', fileUpload(path.join(__dirname, '../client/assets/uploads/courseimg/')).single('courseimg'), async (req, res) => {
+    console.log(req.file)
+    return res.json({msg:'File uploaded', result:req.file.filename})
 })
 
 module.exports = router

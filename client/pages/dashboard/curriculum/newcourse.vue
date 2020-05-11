@@ -77,7 +77,7 @@ export default {
 
             
             try{
-                let resCourseImg = await this.$axios.post('/api/teacher/courseimg', imagefile)
+                let resCourseImg = await this.$axios.post('/api/teacher/singleupaload', imagefile)
                 console.log(resCourseImg)
                 let resCourseInfos = await this.$axios.post('/api/teacher/course/new', {name:this.name, code:this.code, courseimg:resCourseImg.data.result})
 
