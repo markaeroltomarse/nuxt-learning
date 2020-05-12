@@ -11,7 +11,7 @@
             <form @submit.prevent="loginSubmit" v-else>
                 <h4>Login</h4>
                 <small>Email: </small>
-                <input type="email" ref="email" class="form-control" v-model="login.email" required>
+                <input type="email" ref="email" class="form-control mb-1" v-model="login.email" required>
 
                 <small>Password: </small>
                 <input type="password" class="form-control" v-model="login.password" required>

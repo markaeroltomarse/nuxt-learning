@@ -65,9 +65,21 @@ const course = mongoose.Schema({
     name:String,
     code:String,
     courseimg:String,
-    subjects:{
-        type:[String],
-        required:false
+    first:{
+        type:[Object],
+        required:false,
+    },
+    second:{
+        type:[Object],
+        required:false,
+    },
+    third:{
+        type:[Object],
+        required:false,
+    },
+    fourth:{
+        type:[Object],
+        required:false,
     },
     enrolled:{
         type:[String],
@@ -89,6 +101,7 @@ const subjects = mongoose.Schema({
     desc:String,
     year:String,
     sem:String,
+    subimg:String,
     enrolled:{
         type:[String],
         default:[],

@@ -3,6 +3,9 @@
         <carousel speed="300" :per-page="4" class="px-3 w-100 bg-light" paginationColor="turquoise" paginationActiveColor="teal">
             <slide
 
+                data-toggle="tooltip" title="Hooray!"
+                v-for="subject in subjects" 
+                :key="subject._id"
                 data-aos="flip-up"
                 
                 class="hoverSub my-3 mr-1"
@@ -18,7 +21,7 @@
                 </div>
 
                 <div class="p-2">
-                    <strong style="font-size:13px;">Computer Programming</strong><br>
+                    <strong style="font-size:13px;">{{subject.name}}</strong><br>
                     <small class="text-secondary">by DIT. Fahad</small>
                 </div>
             </slide>
@@ -41,6 +44,10 @@ export default {
         directToSub(){
             alert('FUCK')
         }
+    },
+
+    created(){
+         $('[data-toggle="tooltip"]').tooltip(); 
     }
 }
 </script>

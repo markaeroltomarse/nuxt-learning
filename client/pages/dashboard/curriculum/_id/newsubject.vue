@@ -8,7 +8,7 @@
                 </div>
             </div>
             <form v-else @submit.prevent="newsubjectSubmit">
-                <h4 class="bg-info px-3 py-1 text-white"><strong>BSIT</strong> - 
+                <h4 class="bg-info px-3 py-1 text-white"><strong>{{course.name}}</strong> - 
                 <span class="text-light">New subject in {{semester}} semester</span></h4>
 
                 <div class="newsub-panel">
@@ -36,7 +36,7 @@
 
                         <small>Subject image:</small>
                         <div @click="openFile" :style="{backgroundImage:`url('${selectedImgBg}')`}" class="subjectimg border rounded w-100 text-center">
-                            <small :class="selectedImg == null ? '' : 'text-danger'">{{selectdImgtxt == null ? selectdImgtxt : 'Remove this image'}}</small>
+                            <small :class="selectedImg == null ? '' : 'text-danger'">{{selectdImgtxt}}</small>
                         </div>
                     </div>
                     <div class="p-3 text-center">
@@ -44,9 +44,9 @@
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio, quas.</p>
                     </div>
                 </div>
-                <div class="text-center py-5 bg-light">
-                    <button class="btn btn-info" @click="newsubjectSubmit">SUBMIT</button><br>
-                    <small class="text-secondary">BSIT - FIRST SEMESTER </small>
+                <div class="text-center py-5 bg-light" >
+                    <button data-aos="fade-up" class="btn btn-info" @click="newsubjectSubmit">SUBMIT</button><br>
+                    <small  class="text-secondary">{{course.name}} - FIRST SEMESTER </small>
                 </div>
             </form>
             
@@ -57,7 +57,7 @@
 <script>
 
 import dashDefault from '../../../../components/dashboard'
-
+import path from 'path'
 export default {
     middleware:['authen', 'master'],
     components:{
@@ -84,25 +84,34 @@ export default {
             selectedImgBg:'',
         }
     },
-    async asyncData({store}){
+    async asyncData({$axios, params, store}){
         store.dispatch('SET_USER')
+        try{
+            let course = await $axios.post('/api/teacher/master/course', {courseID:params.id})
+            if(course.data.error) return alert(course.data.error)
+            console.log(course.data.data)
+            return {course:course.data.data}
+        }catch(err){
+            alert(err)
+        }
     },
     methods:{
         openFile(){
             if(this.selectedImg != null){
                 this.selectedImg = null
-                this.selectdImgtxt = ''
+                this.selectdImgtxt = 'Choose Image +'
                 return this.selectedImgBg = ''
             }
+
+            this.selectdImgtxt = 'Remove this image - '
             
             return this.$refs.subfile.click()
         },
         changeImg(event){
-            console.log(event.target.files[0])
             
             try{
-                let allowedimg = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
-                if(!allowedimg.includes('image/'+event.target.files[0].name.split('.').pop())) return this.selectdImgtxt = 'File in not an image'
+                let allowedimg = ['jpeg', 'jpg', 'png', 'gif']
+                if(!allowedimg.includes(event.target.files[0].name.split('.').pop())) return this.selectdImgtxt = 'File in not an image'
                 if(event.target.files[0].size > 600000) return this.selectdImgtxt = 'Image size is too big!'
                 
                 this.selectedImg = event.target.files[0]
@@ -112,6 +121,7 @@ export default {
             }
         },
         async newsubjectSubmit(){
+            
             this.spinner = true
             if(this.code == '' | this.name == '' | this.units == '' | this.year.val == ''){
                 this.spinner = false
@@ -122,16 +132,23 @@ export default {
                 })
             }
 
-            if(this.selectedImg == null) return this.selectdImgtxt = 'Please select an image'; this.spinner = false
-
-            let newsubimg = new FormData()
-            newsubimg.append('newsubimg', this.selectedImg)
+            if(this.selectedImg == null){
+                this.selectdImgtxt = 'Please select an image'; 
+                return this.spinner = false
+            }
             
+            
+            // newsubimg.append('newsubimg', {course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc})
             try{
-
-                // let subimgres = await this.$axios.post('/api/teacher/singleupaload', newsubimg)
-                let subinfos = await this.$axios.post('/api/teacher/course/subject/newsubject', {subdata:{course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc}, newsubimg})
-
+                let newsubimg = new FormData()
+                newsubimg.append('newsubimg', this.selectedImg)
+                let subimgres = await this.$axios.post('/api/teacher/singleupload?dest=subjectimg&fileref=newsubimg', newsubimg)
+                this.$store.dispatch('CALL_GLOBALMSG', {
+                    type:'success',
+                    icon:'fa-exclamation-circle',
+                    msg:subimgres.data.msg
+                })
+                let subinfos = await this.$axios.post('/api/teacher/course/subject/newsubject/', {course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc, subimg:subimgres.data.imagetoken})
                 this.$store.dispatch('CALL_GLOBALMSG', {
                     type:'success',
                     icon:'fa-exclamation-circle',
