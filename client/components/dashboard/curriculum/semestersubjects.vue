@@ -17,7 +17,7 @@
 
                 @slideclick="directToSub(subject._id)">
                 <div>
-                    <img class="rounded-top" src="../../../assets/subjectsimage/pexels-photo-160107.jpeg" width="100%" alt="">
+                    <img class="rounded-top" :src="require('../../../assets/uploads/subjectimg/'+subject.subimg)" width="100%" alt="">
                 </div>
 
                 <div class="p-2">

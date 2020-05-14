@@ -152,6 +152,21 @@ router.post('/course/subject/newsubject', async (req, res) => {
     
 })
 
+//IUPDATE ANG CONFIG NG SUBJECT
+router.post('/master/course/subject/updateconfig', async (req, res) => {
+    console.log(req.body)
+    try{
+        return await Subjects.updateOne({_id: req.body.subid}, {
+            config: req.body.config
+        }, (err, resp) => {
+            if(err) throw err
+            return res.status(200).json({msg:'Subject config saved!', result:true}) 
+        })
+    }catch(err){
+        return res.status(404).json({msg:err, result:false})
+    }
+})
+
 //MAG AADD TAYO NG BAGONG TEACHER SA DEPARTMENT OR COURSE
 router.post('/master/course/newteacher', async (req, res) => {
     console.log(req.body)
