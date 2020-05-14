@@ -2,18 +2,40 @@
   <div class="bg-light pt-3">
       <dashDefault/>
 
-      <section class="subjectsPanel text-secondary py-2 " data-aos="fade-up" style="padding-bottom:20vh;">
+      <section class="subjectsPanel  py-2 " data-aos="fade-up" style="padding-bottom:20vh;">
           <h2><strong>Curriculum</strong></h2>
+          <v-alert
+          
+      color="#C51162"
+      dark
+      icon="mdi-material-design"
+      border="right"
+    >
+      Phasellus blandit leo ut odio. Morbi mattis ullamcorper velit. Donec orci lectus, aliquam ut, faucibus non, euismod id, nulla. In ut quam vitae odio lacinia tincidunt.
+    </v-alert>
+        <v-banner single-line  class="mb-2">
+            <v-icon
+            slot="icon"
+            color="warning"
+            size="36"
+            
+            >
+            mdi-wifi-strength-alert-outline
+            </v-icon>
+            Make sure your connection is table
 
-          <div v-for="course in courses" :key="course._id" class="course-panel bg-white shadow-sm mb-2">
+            
+        </v-banner>
+          <div v-ripple="{ class: `text-info` }" v-for="course in courses" :key="course._id" class="course-panel bg-white shadow-sm mb-2">
               <div>
                 <h4>
-                    <n-link :to="`/dashboard/curriculum/${course._id}`"><strong class="text-dark">{{course.name}}</strong> - <span class="text-secondaty">{{course.code}}</span></n-link>
+                    <n-link :to="`/dashboard/curriculum/${course._id}`"><strong class="text-dark font-weight-black">{{course.name}}</strong> - <span class="text-secondaty">{{course.code}}</span></n-link>
                 </h4>
+                
                 <div class="course-info">
                     <div class="bg-info rounded text-center p-2 text-light">
                         <h2>60</h2>
-                        <small>SUBJECTS</small>
+                        <small class="font-weight-thin">SUBJECTS</small>
                     </div>
 
                     <div class="bg-info rounded text-center p-2 text-light">

@@ -1,7 +1,7 @@
 <template>
   <div class="bg-light pt-3">
       <dashDefault/>
-      <section class="documentBody bg-white px-0">
+      <section class="documentBody bg-white px-0" data-aos="fade-up">
           <h4 class="text-center"><strong class="text-info">Create new course.</strong></h4>
 
            <div class="text-center" v-if="spinner" >
@@ -23,7 +23,7 @@
                   <small><strong class="text-white">Course ID:</strong></small>
                   <input v-model="code" type="text" class="form-control" required>
                   <input type="file" @change="selectedFile" hidden ref="courseimg">
-                  <div  class="w-100 bg-light rounded my-1 text-center imgselected" @click="$refs.courseimg.click()" :style="{backgroundImage:`url('${imgSelected}')`}">
+                  <div v-ripple='{class:`text-info`}' class="w-100 bg-light rounded my-1 text-center imgselected" @click="$refs.courseimg.click()" :style="{backgroundImage:`url('${imgSelected}')`}">
                       <small class="text-secondary">{{courseimgtxt}}</small>
                   </div>
                   <p>{{selectedFileimg != null ? selectedFileimg.name : ''}}</p>

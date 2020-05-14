@@ -3,39 +3,53 @@
  <div class="sidebar ">
      
      <div >
-        <div @click="changeRoute('/dashboard', 'home')" :class="this.$store.state.dashboard.modulebtn.home">
+        <div v-ripple='{class:`text-light`}' @click="changeRoute('/dashboard', 'home')" :class="this.$store.state.dashboard.modulebtn.home">
             <div class=" text-center "><i class="fas fa-home"></i></div>
             <div>HOME</div>
         </div>
 
-        <div @click="changeRoute('/dashboard/record', 'record')" :class="this.$store.state.dashboard.modulebtn.record">
+        <div v-ripple='{class:`text-light`}' @click="changeRoute('/dashboard/record', 'record')" :class="this.$store.state.dashboard.modulebtn.record">
             <div class=" text-center "><i class="fas fa-swatchbook"></i></div>
             <div>RECORD <span class="badge badge-warning text-light " style="float:right; margin:2% 0px;"><small>New</small></span></div>
         </div>
 
-        <div @click="changeRoute('/dashboard/sections', 'sections')" :class="this.$store.state.dashboard.modulebtn.sections">
+        <div v-ripple='{class:`text-light`}' @click="changeRoute('/dashboard/sections', 'sections')" :class="this.$store.state.dashboard.modulebtn.sections">
             <div class=" text-center "><i class="fas fa-restroom"></i></div>
             <div>SECTIONS</div>
         </div>
 
         <p class=" p-2 my-2 text-secondary">Others</p>
 
-        <div @click="changeRoute('/dashboard/logs', 'logs')" :class="this.$store.state.dashboard.modulebtn.logs">
+        <div v-ripple='{class:`text-light`}' @click="changeRoute('/dashboard/logs', 'logs')" :class="this.$store.state.dashboard.modulebtn.logs">
             <div class=" text-center "><i class="fas fa-clipboard-list"></i></div>
             <div>Logs <span class="badge badge-warning text-light " style="float:right; margin:2% 0px;"><small>New</small></span></div>
         </div>
 
-        <div @click="changeRoute('/dashboard/subjects', 'subjects')" :class="this.$store.state.dashboard.modulebtn.subjects">
+        <div v-ripple='{class:`text-light`}' @click="changeRoute('/dashboard/subjects', 'subjects')" :class="this.$store.state.dashboard.modulebtn.subjects">
             <div class=" text-center "><i class="fas fa-book"></i></div>
             <div>Subjects <span class="badge badge-warning text-light " style="float:right; margin:2% 0px;"><small>New</small></span></div>
         </div>
 
-        <div v-if="masterAuth()" @click="changeRoute('/dashboard/curriculum', 'curriculum')" :class="this.$store.state.dashboard.modulebtn.curriculum">
+        <div v-ripple='{class:`text-light`}' v-if="masterAuth()" @click="changeRoute('/dashboard/curriculum', 'curriculum')" :class="this.$store.state.dashboard.modulebtn.curriculum">
             <div class=" text-center "><i class="fas fa-book"></i></div>
             <div>Curriculum <span class="badge badge-warning text-light " style="float:right; margin:2% 0px;"><small>New</small></span></div>
         </div>
 
-        
+        <div>
+            <v-overflow-btn
+                class="my-2"
+                :items="['fuckj', 'your', 'ka']"
+                label="Segmented Btn"
+                segmented
+                target="#dropdown-example"
+            ></v-overflow-btn>
+        </div>
+
+        <div>
+            <v-btn icon color="indigo">
+              <v-icon>mdi-star</v-icon>
+            </v-btn>
+        </div>
         
      </div>
  </div> 

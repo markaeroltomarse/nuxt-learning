@@ -8,7 +8,7 @@
               <img src="../assets/undraw/toga.png" style="width:160%;" >
             </div>
             <div class="text-dark text-left py-2">
-              QUICKQUIZ
+              QUICKQUIZ 
             </div>
         </div>
       </nuxt-link>
@@ -43,10 +43,42 @@
     </div>
     </client-only>
     
-    <section class="mainBody">
+    <!-- <v-navigation-drawer
+      v-model="drawer"
+      absolute
+      temporary
+    >
+      <v-list
+        nav
+        dense
+      >
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Account</v-list-item-title>
+          </v-list-item>
+
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer> -->
+    <v-app>
+       <section class="mainBody" app>
       
-      <nuxt />
-    </section>
+        <nuxt app/>
+      </section>
+    </v-app>
   </div>
 </template>
 

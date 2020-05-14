@@ -3,7 +3,7 @@ const models = require('../models/')
 const multer = require('multer')
 const path = require('path')
 const uuid = require('uuid')
-
+var fs = require('fs');
 const ERR = require('../errors/teachersErr')
 
 
@@ -12,6 +12,7 @@ const router = express.Router()
 const Subjects = models.Subjects
 const Quiz = models.Quiz
 const Course  = models.Course
+const Users = models.Users
 
 
 
@@ -105,9 +106,9 @@ router.post('/master/course', async (req, res) => {
         }
         let courseSubs = await Subjects.find({course:req.body.courseID})
         course[0].subjects = courseSubs
-        console.log(courseSubs.length)
+        //console.log(courseSubs.length)
         courseSubs.forEach(sub => {
-            console.log(sub)
+            //console.log(sub)
             if(sub.sem == 'first') return course[0].first.push(sub)
             if(sub.sem == 'second') return course[0].second.push(sub)
             if(sub.sem == 'third') return course[0].third.push(sub)
@@ -119,10 +120,23 @@ router.post('/master/course', async (req, res) => {
     }
 })
 
+//KUNIN ANG ISANG SUBJECTS PARA SA MASTER
+router.post('/master/course/subject', async (req, res) => {
+    try{
+        let subjects = await Subjects.find({_id:req.body.subID})
+        if(subjects.length < 0){
+            return res.status(404).json({msg:ERR.UNDEFINED_SUBJECT, result:false})
+        }
+        res.json({subject:subjects[0], result:true})
+    }catch(err){
+        return res.sendStatus(404)
+    }
+})
+
 //BAGONG SUBJECT NA IINSERT 
 router.post('/course/subject/newsubject', async (req, res) => {
     const {course, sem, code, name, units, year, desc, subimg} = req.body
-    console.log(req.body)
+    //console.log(req.body)
     try{
        let newsubjects = new Subjects(req.body)
 
@@ -136,6 +150,41 @@ router.post('/course/subject/newsubject', async (req, res) => {
     }
     return 
     
+})
+
+//MAG AADD TAYO NG BAGONG TEACHER SA DEPARTMENT OR COURSE
+router.post('/master/course/newteacher', async (req, res) => {
+    console.log(req.body)
+    const {fname, lname, username, password, gender, age, major, course} = req.body
+    
+    try{
+        const validate = await Users.find()
+        if(validate.some(user => user.email == username | user.password == password))  return res.json({msg:'User name or password is not available', result:false}) 
+
+        const newTeacher = new Users({
+            fname, lname, email:username, password, gender, age,
+            teacherInfo:{major, department:course}
+        }) 
+        //return res.json({msg:'Teacher added!', result:newTeacher})
+        
+        newTeacher.save().then(resteacher => {
+            res.status(200).json({msg:'Teacher added!', result:resteacher})
+
+            fs.mkdirSync(path.join(__dirname, '../client/assets/uploads/users/'+resteacher._id));
+        })
+        .catch(err => res.status(200).json({msg:err, result:false}))
+    }catch(err){
+        return res.json({msg:'Something wrong.. :'+err, result:false})
+    }
+})
+
+router.post('/master/course/deptteacher', async (req, res) => {
+    try{
+        const DeptTeachers = await Users.find({'teacherInfo.department': req.body.courseID })
+        return res.status(200).json({msg:'', data:DeptTeachers})
+    }catch(Err){
+        return res.status(404).json({msg:Err})
+    }
 })
 
 

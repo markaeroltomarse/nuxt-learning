@@ -20,6 +20,12 @@ export const state = () => ({
         },
         postquiz:{
             overviewNumbers:[],
+        },
+        
+        master:{
+            subject:{
+                config:null
+            }
         }
     },
     globalMessage:{
@@ -43,13 +49,6 @@ export const getters = {
 export const mutations = {
 
     
-    // SET_VIDEOS(state, videos){
-    //     state.videos = videos
-    // },
-
-    // SET_CURRENT_VIDEO(state, video){
-    //     state.currentVideo = video
-    // },
 
     CALL_GLOBALMSG(state, info){
         state.globalMessage = info  
@@ -114,6 +113,13 @@ export const mutations = {
                 }
             }
         })
+    },
+
+
+    REMIND_CONFIG(state, config){
+        console.log("CONFIG")
+        console.log(config)
+        state.dashboard.master.subject.config = config
     }
 }
 

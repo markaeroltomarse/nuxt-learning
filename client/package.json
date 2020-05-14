@@ -15,7 +15,6 @@
     "@nuxtjs/axios": "^5.10.3",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "aos": "^2.3.4",
-    "bootstrap": "^4.1.3",
     "bootstrap-vue": "^2.0.0",
     "nuxt": "^2.0.0",
     "v-click-outside": "^3.0.1",
@@ -23,5 +22,7 @@
     "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.2"
+  }
 }

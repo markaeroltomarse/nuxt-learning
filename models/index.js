@@ -36,27 +36,75 @@ const users = mongoose.Schema({
         required:true,
         length:10
     },
-
-    section:{
-        type:String,
-        required:false,
-        length:25
+    age:{
+        type:Number,
+        required:true
     },
-
-    year:{
+    created:{
         type:String,
-        required:true,
-        length:25,
+        default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`
     },
+    studentInfo:{
+        section:{
+            type:String,
+            required:false,
+            length:25
+        },
     
-    subjects:{
-        type:[String],
-        require:false
+        year:{
+            type:String,
+            required:false,
+            length:25,
+        },
+        
+        subjects:{
+            type:[String],
+            require:false
+        },
+        quizesTaken:{
+            type:[String]
+        },
+        status:{
+            mode:{
+                type:String,
+                default:'active'
+            },
+            modified:{
+                type:String,
+                required:false
+            }
+        },
     },
 
-    quizesTaken:{
-        type:[String]
+    images:{
+        profile:{
+            type:String,
+            required:false,
+        },
+        photos:{
+            type:[String],
+            required:false
+        }
+    },
+
+    teacherInfo:{
+        major:String,
+        department:String,
+        status:{
+            mode:{
+                type:String,
+                default:'active',
+                required:false
+            },
+            modified:{
+                type:String,
+                default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`,
+                required:false,
+            }
+        }
     }
+
+    
 })
 
 
@@ -111,6 +159,18 @@ const subjects = mongoose.Schema({
         type:[String],
         default:[],
         required:false
+    },
+    config:{
+        posting:{
+            type:Boolean,
+            default:true,
+            required:false,
+        },
+        enrollment:{
+            type:Boolean,
+            default:true,
+            required:false,
+        }
     }
 })
 

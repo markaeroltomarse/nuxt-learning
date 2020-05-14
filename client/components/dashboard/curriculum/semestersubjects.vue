@@ -3,7 +3,7 @@
         <carousel speed="300" :per-page="4" class="px-3 w-100 bg-light" paginationColor="turquoise" paginationActiveColor="teal">
             <slide
 
-                data-toggle="tooltip" title="Hooray!"
+                
                 v-for="subject in subjects" 
                 :key="subject._id"
                 data-aos="flip-up"
@@ -15,7 +15,7 @@
                 
                 :mouse-drag="true"
 
-                @slideclick="directToSub">
+                @slideclick="directToSub(subject._id)">
                 <div>
                     <img class="rounded-top" src="../../../assets/subjectsimage/pexels-photo-160107.jpeg" width="100%" alt="">
                 </div>
@@ -34,6 +34,11 @@ import {Carousel, Slide } from 'vue-carousel'
 
 export default {
     name:'semesterSubjects',
+    data(){
+        return {
+            courseID:this.$route.params.id
+        }
+    },
     props:{
         subjects:Array
     },
@@ -41,13 +46,14 @@ export default {
         Carousel, Slide
     },
     methods:{
-        directToSub(){
-            alert('FUCK')
+        directToSub(ref){
+            alert(ref)
+            return this.$router.replace({path:`/dashboard/curriculum/${this.courseID}/subject?ref=${ref}`})
         }
     },
 
     created(){
-         $('[data-toggle="tooltip"]').tooltip(); 
+       
     }
 }
 </script>
