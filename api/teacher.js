@@ -49,6 +49,8 @@ router.get('/subjects', async (req, res) => {
 })
 
 
+
+
 //BAGONG QUIZ NA IINSERT SA SUBJECT
 router.post('/subject/newquiz', async (req, res) => {
     console.log(req.body.newquiz)
@@ -177,7 +179,7 @@ router.post('/master/course/newteacher', async (req, res) => {
         if(validate.some(user => user.email == username | user.password == password))  return res.json({msg:'User name or password is not available', result:false}) 
 
         const newTeacher = new Users({
-            fname, lname, email:username, password, gender, age,
+            fname, lname, email:username, password, gender, age, userType:'admin',
             teacherInfo:{major, department:course}
         }) 
         //return res.json({msg:'Teacher added!', result:newTeacher})

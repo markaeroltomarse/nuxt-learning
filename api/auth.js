@@ -4,7 +4,7 @@ const Users = require('../models/index').Users
 
 const router = express.Router()
 
-
+//KUNIN ANG MGA USERS
 router.get('/', async (req, res) => {
     try{
         const users = await Users.find()
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-
+//KUNIN ANG USER NA NAKA SESSION
 router.get('/user', async (req, res ) => {
 
     try{
@@ -26,6 +26,7 @@ router.get('/user', async (req, res ) => {
     }
 })
 
+//LOGIN PROCESS
 router.post('/login', async (req, res) => {
     let {email, password } = req.body
     //return res.status(200).json({msg:'Invalid login!', result:false})
@@ -43,12 +44,13 @@ router.post('/login', async (req, res) => {
     }
 })
 
+//LOGOUT PROCESS
 router.get('/logout', async (req, res) => {
     req.session.userId = ''
     return res.status(200).json({msg:'Success Logout!', token:req.session.userId})
 })
 
-
+//KUNG MAY NAKA LOGIN NABA
 router.get('/exist', async (req, res )=>{
     if(req.session.userId == '' | req.session.userId == null) return res.status(200).json({result:false, token:''})
     try{
@@ -60,7 +62,7 @@ router.get('/exist', async (req, res )=>{
      
 })
 
-
+//KUNG ANONG TYPE NG USER NA NAKALOGIN
 router.get('/type', async (req, res) => {
     try{
         if(req.session.userId == '' | req.session.userId == null) return res.json({result:'', msg:'NULL SESSION'})

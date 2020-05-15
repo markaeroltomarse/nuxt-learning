@@ -68,7 +68,7 @@ export default {
 
         masterAuth(){
             try{
-                return (this.$store.state.user._id == '5ea66a7adbba1835b4bdfb1d')
+                return (this.$store.state.user._id == '5ebeb67c8628f6049069cc24')
             }catch(err){
                 return false
             }

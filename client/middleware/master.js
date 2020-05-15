@@ -1,6 +1,6 @@
 export default async ({$axios, store, redirect, $route}) => {
     //PARA LANG SA MGA MASTER
-    if(store.state.user._id != '5ea66a7adbba1835b4bdfb1d'){
+    if(store.state.user._id != '5ebeb67c8628f6049069cc24'){
         //return redirect('/dashboard/subjects')
         let check = await $axios.$get('/api/auth/exist')
         if(check.token != ''){

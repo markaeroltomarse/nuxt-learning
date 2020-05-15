@@ -77,14 +77,16 @@ const users = mongoose.Schema({
     },
 
     images:{
-        profile:{
-            type:String,
-            required:false,
-        },
+        
         photos:{
             type:[String],
             required:false
-        }
+        },
+        profile:{
+            type:String,
+            required:false,
+            default:''
+        },
     },
 
     teacherInfo:{

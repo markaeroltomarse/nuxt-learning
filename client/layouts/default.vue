@@ -224,4 +224,16 @@ nav{
 .globalMessage > div > i {
   font-size:50px;
 }
+
+
+.overlay{
+  width:100vw;
+  height:100vh;
+  position: fixed;
+  top:0;
+  left: 0;
+  transition:0.2s;
+  background-color:rgba(77, 223, 130, 0.44);
+  z-index:30;
+}
 </style>
