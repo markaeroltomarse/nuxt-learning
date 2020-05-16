@@ -197,10 +197,41 @@ router.post('/master/course/newteacher', async (req, res) => {
 
 router.post('/master/course/deptteacher', async (req, res) => {
     try{
+        
+        
         const DeptTeachers = await Users.find({'teacherInfo.department': req.body.courseID })
         return res.status(200).json({msg:'', data:DeptTeachers})
     }catch(Err){
         return res.status(404).json({msg:Err})
+    }
+})
+
+
+//ASSIGN NEW TEACHER INTO SUBJECT
+router.post('/master/course/subject/newteacherassign', async (req, res)=> {
+    // console.log(req.body)
+    // console.log(req.body.subID)
+    //return res.json({msg:`Teacher's assigned!`})
+    try{
+        let teachers = req.body.teachers
+        teachers.forEach(async teacher => {
+            return await Subjects.update({_id:req.body.subID}, {$push:{assignTeachers:teacher._id }})
+        })
+        return res.json({msg:`Teacher's assigned!`})
+    }catch(err){
+        return res.status(404).json({msg:err})
+    }
+})
+
+//REMVOE NEW TEACHER INTO SUBJECT
+router.delete('/master/course/subject/deleteteacher', async (req, res) => {
+    console.log(req.body)
+    //return res.json({msg:'Success!', })
+    try{
+        let removeAssign = await Subjects.updateOne({_id: req.body.subID}, { $pullAll: {assignTeachers: [req.body._id] } })
+        return res.json({msg:'Success!', data:removeAssign})
+    }catch(err){
+        return res.status(404).json({msg:err})
     }
 })
 

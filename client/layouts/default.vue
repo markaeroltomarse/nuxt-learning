@@ -233,7 +233,7 @@ nav{
   top:0;
   left: 0;
   transition:0.2s;
-  background-color:rgba(77, 223, 130, 0.44);
+  
   z-index:30;
 }
 </style>
