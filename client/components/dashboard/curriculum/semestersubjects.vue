@@ -47,7 +47,7 @@ export default {
     },
     methods:{
         directToSub(ref){
-            alert(ref)
+            
             return this.$router.replace({path:`/dashboard/curriculum/${this.courseID}/subject?ref=${ref}`})
         }
     },

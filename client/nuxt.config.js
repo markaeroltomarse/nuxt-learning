@@ -18,14 +18,14 @@ export default {
     ],
     script:[
       { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js' },
-      { src: 'https://kit.fontawesome.com/a076d05399.js'},
+      { src: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js'},
       
     ]
   },
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: 'black' },
+  loading: { color: 'teal' },
   /*
   ** Global CSS
   */

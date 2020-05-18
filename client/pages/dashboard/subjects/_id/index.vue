@@ -7,19 +7,19 @@
           <div class="details " >
               <div class=" " data-aos="fade-up">
                   <div class="details-div shadow-sm text-scondary" >
-                    <h4>Computer prog</h4>
+                    <h4>{{subject.name}}</h4>
                     
                     <div class="row px-3">
                         <div class="col ">
                             <small>Year:</small>
-                            <p class="border-bottom"><strong class="text-info">2020 - 2021</strong></p>
+                            <p class="border-bottom"><strong class="text-info">{{subject.year}}</strong></p>
 
                             <small>Semester:</small>
-                            <p class="border-bottom"><strong class="text-info">1st sem</strong></p>
+                            <p class="border-bottom"><strong class="text-info">{{subject.sem}}</strong></p>
 
                             <div class="rounded text-info p-3 bg-light text-center">
                                 <p style="font-size:50px;">
-                                    <strong>4</strong>
+                                    <strong>{{subject.assignTeachers.length}}</strong>
                                 </p>
                                 <small>Teacher's</small>
                             </div>
@@ -27,15 +27,15 @@
 
                         <div class="col-6  bg-light text-info rounded p-2">
                             <p><strong>Description</strong></p>
-                            <p class="text-justify text-italic"><small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi consectetur, dolorum, ad doloremque delectus eos enim illum nemo beatae similique quasi neque nulla quo nostrum recusandae voluptatum esse labore. Sint suscipit, qui iste molestias doloribus necessitatibus consectetur atque blanditiis reprehenderit sunt esse omnis. Dignissimos repellat quasi doloribus! Tempore, nesciunt ipsam?</small></p>
+                            <p class="text-justify text-italic"><small>{{subject.desc}}</small></p>
                         </div>
                     </div>
                   </div>
               </div>
               <div class="">
                   <div class=" p-2 bg-white details-img shadow-sm " data-aos="fade-up">
-                      <h2>#<strong>ICT-032</strong></h2>
-                      <img src="../../../../assets/undraw/subject.png" alt="" width="100%">
+                      <h2>#<strong>{{subject.code}}</strong></h2>
+                      <img :src="require(`../../../../assets/uploads/subjectimg/${subject.subimg}`)" alt="" width="100%">
                   </div>
                   
                   <div class="details-div mt-3 w-100 text-center py-4 shadow-sm" data-aos="fade-up">
@@ -52,22 +52,84 @@
           <div class="teachers-div shadow-sm" data-aos="fade-up">
               <h4 class="text-center text-info">Teacher's</h4>
               <div class="teachers-card ">
-                  <div class="shadow-sm shadow-info rounded bg-light">
+
+                  <div class=" rounded teacher-card" @mouseover="styleIt(subject._id)" @mouseout="normalStyle(subject._id)">
                       <div class="p-2 ">
-                          <img class="thumbnail rounded-circle" src="../../../../assets/undraw/subject.png" alt="" width="100%">
+                          <div  :ref="subject._id" class="teacherimg" :style="{backgroundImage:`url('${require(`../../../../assets/uploads/subjectimg/${subject.subimg}`)}')`}">
+
+                          </div>
                       </div>
                       <div class="p-2 text-center border-top">
-                          <strong>Mark Aerol Tomarse</strong>
+                          <strong >Mark Aerol Tomarse</strong>
                       </div>
                   </div>
+
               </div>
               
           </div>
 
 
           <div class="teachers-div shadow-sm" data-aos="fade-up">
-              <h4 class="text-center text-info">Schedule week</h4>
-              
+              <h4 class="text-center text-info" >Posted quiz</h4>
+              <v-list :avatar="true">
+                  <v-list-item-group>
+                      <v-subheader color="teal">Earlier</v-subheader>
+                      <v-list-item class="postedfiles border-bottom">
+                          <v-list-item-action>
+                              <span class="badge badge-info">
+                                  Exam
+                              </span>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                              <v-list-item-title>
+                                  Quiz 1 
+                              </v-list-item-title>
+                              <v-list-item-subtitle>
+                                  January 02, 2020
+                              </v-list-item-subtitle>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                             
+                          </v-list-item-action>
+                          
+                      </v-list-item>
+
+                      <v-subheader color="teal">Yesterday</v-subheader>
+                      <v-list-item class="postedfiles border-bottom">
+                          <v-list-item-action>
+                              <span class="badge badge-info">
+                                  Exam
+                              </span>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                              <v-list-item-title>
+                                  Quiz 1 
+                              </v-list-item-title>
+                              <v-list-item-subtitle>
+                                  January 02, 2020
+                              </v-list-item-subtitle>
+                          </v-list-item-content>
+                      </v-list-item>
+
+
+                      <v-subheader color="teal">Others</v-subheader>
+                      <v-list-item class="postedfiles border-bottom">
+                          <v-list-item-action>
+                              <span class="badge badge-info">
+                                  Exam
+                              </span>
+                          </v-list-item-action>
+                          <v-list-item-content>
+                              <v-list-item-title>
+                                  Quiz 1 
+                              </v-list-item-title>
+                              <v-list-item-subtitle>
+                                  January 02, 2020
+                              </v-list-item-subtitle>
+                          </v-list-item-content>
+                      </v-list-item>
+                  </v-list-item-group>
+              </v-list>
           </div>
 
           
@@ -81,12 +143,32 @@ import dashDefault from '../../../../components/dashboard'
 
 export default {
     middleware:['authen'],
-    async asyncData({store}){
-        store.dispatch('SET_USER')
-        store.commit('SET_ACTIVEMODULE', 'subjects')
+    async asyncData({$axios, store, params, query}){
+        try{
+            store.dispatch('SET_USER')
+            store.commit('SET_ACTIVEMODULE', 'subjects')
+            
+            const subjectinfo = await $axios.post('/api/teacher/master/course/subject', {subID:params.id})
+            console.log(subjectinfo.data)
+
+            return {
+                subject:subjectinfo.data.subject
+            }
+        }catch(err){
+            console.log(err)
+        }
     },
     components:{
         dashDefault
+    },
+    methods:{
+        styleIt(elem){
+            this.$refs[elem].style.border = '5px solid turquoise'
+        },
+
+        normalStyle(elem){
+            this.$refs[elem].style.border = '5px solid teal'
+        }
     }
 }
 </script>
@@ -96,6 +178,7 @@ export default {
     margin-top:1%;
     min-height:100vh;
     margin:0px 20%;
+    
 }
 
 .details{
@@ -130,10 +213,48 @@ export default {
 }
 
 .teachers-card{
+    
     display:grid;
     grid-template-columns:1fr 1fr 1fr 1fr;
     grid-gap:10px;
 }
+
+.teacher-card{
+    transition:0.2s;
+    cursor:pointer;
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
+    color:teal;
+}
+
+.teacher-card:hover{
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
+    transition:0.2s;
+    background-color:teal;
+    color:white;
+}
+
+.teacherimg {
+    background-size:100% 100%; background-position:center; background-repeat:no-repeat;
+    padding:27%;
+    border-radius:50%;
+    margin:2% 15%;
+    border:5px solid  teal;
+}
+.teacher-card:hover{
+    transition:0.2s;
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
+}
+.postedfiles{
+    background-color:rgba(0,0,0,0.01);
+    
+}
+.postedfiles:hover{
+    transition:0.2s;
+    background-color:turquoise;
+    color:white;
+}
+
+
 
 
 </style>

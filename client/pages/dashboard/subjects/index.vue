@@ -11,11 +11,11 @@
 
         <section class="subjectsPanel text-secondary py-3" data-aos="fade-up">
 
-            <h2 class=""><strong>Your cota's</strong> <n-link to='/dashboard/subjects/addnew'><button class="btn btn-outline-info float-right btn-sm">+</button></n-link></h2>
+            <h2 class=""><strong>Your subject's</strong> <n-link to='/dashboard/subjects/addnew'><button class="btn btn-outline-info float-right btn-sm">+</button></n-link></h2>
 
-            <div class="subject bg-white mb-2" v-for="subject in subjects" :key="subject._id">
+            <div class="subject bg-white mb-2 border-bottom" v-for="subject in subjects" :key="subject._id">
                 <div class="border-right">
-                    <h4><strong class="text-info">{{subject.name}}</strong> <span class="badge badge-info" style="float:right;">#{{subject.code}}</span></h4>
+                    <n-link :to="'/dashboard/subjects/'+subject._id"><h4><strong class="text-info">{{subject.name}}</strong> <span class="badge badge-info" style="float:right;">#{{subject.code}}</span></h4></n-link>
                     
                     <div class="">
                         <span class="badge badge-info">
@@ -26,22 +26,35 @@
                             Year: <span class="badge badge-light">{{subject.year}}</span>
                         </span>
 
-                        <n-link :to="'/dashboard/subjects/'+subject._id">
-                            <span class="badge badge-info float-right mt-1 ml-1" style="cursor:pointer;">
-                                View subject <i class="fas fa-expand "></i>
-                            </span>
-                        </n-link>
 
                         <span @click="openPostQuiz(subject)" class="badge badge-info float-right mt-1" style="cursor:pointer;">
                             Post new quiz +
                         </span>
                     </div>
 
-                    <div class="border border-info p-2 rounded my-1">
-                        <small>{{subject.desc}}</small>
+                    <div class="  my-3 subquizes">
+                        <div class="shadow-sm">
+                            <h4><strong>50</strong></h4>
+                            <small style="opacity:0.5;">20</small>
+                        </div>
+
+                        <div class="shadow-sm">
+                            <h4><strong>120</strong></h4>
+                            <small style="opacity:0.5;">Enrolled</small>
+                        </div >
+
+                        <div class="shadow-sm">
+                            <h4><strong>11</strong></h4>
+                            <small style="opacity:0.5;">Teacher's</small>
+                        </div>
+
+                        <div class="shadow-sm">
+                            <h4><strong>5</strong></h4>
+                            <small style="opacity:0.5;">Finish Quizes</small>
+                        </div>
                     </div>
                 </div>
-                <div class="rounded-right" :style="{backgroundImage: `url('${require('../../../assets/subjectsimage/pexels-photo-160107.jpeg')}')`}">
+                <div class="rounded-right" :style="{backgroundImage: `url('${renderImg(subject.subimg)}')`}">
                     
                 </div>
             </div>
@@ -64,14 +77,25 @@ export default {
         }
     },
     async asyncData({$axios, store}){
-        store.commit('SET_ACTIVEMODULE', 'subjects')
-        store.dispatch('SET_USER')
-        let subs = await $axios.get('/api/teacher/subjects')
-        
-        console.log(subs.data)
+        try{
+            store.commit('SET_ACTIVEMODULE', 'subjects')
+            store.dispatch('SET_USER')
+            let subs = await $axios.get('/api/teacher/subjects')
+            
+            console.log(subs.data)
 
-        return {
-            subjects:subs.data
+            return {
+                subjects:subs.data
+            }
+        }catch(err){
+            
+            this.$store.dispatch('CALL_GLOBALMSG', {
+                type:'dark',
+                icon:'fa-warning',
+                msg:'Something problem in your subjects :'+err
+            })
+
+            return this.$router.replace({path:'/error'})
         }
     },
     components:{
@@ -84,6 +108,9 @@ export default {
         openPostQuiz(subject){
             this.postsquizModal.subject = subject
             this.postsquizModal.modal = true
+        },
+        renderImg(img){
+            return require('../../../assets/uploads/subjectimg/'+img)
         }
     }
 }
@@ -110,7 +137,7 @@ export default {
 
    .subject > div{
        padding:1em;
-       background-size:100% 100%;
+       background-size:100% ;
        background-repeat: no-repeat;
        background-position: center;
    }
@@ -119,6 +146,27 @@ export default {
        box-shadow:0px 5px 10px 0px rgba(0,0,0,0.1);
        transition:0.2s;
    }
+   
+   .subquizes{
+       display:grid;
+       grid-template-columns: 1fr 1fr 1fr 1fr;
+       grid-gap:1em;
+   }
 
+   .subquizes > div{
+       background-color:rgba(0,0,0,0.01);
+       border-radius:3px;
+       box-shadow:0px 5px 5px 0px rgba(0,0,0,0.01);
+       color:teal;
+       padding:1em;
+       text-align: center;
+
+   }
+
+   .subquizes > div:hover{
+       background-color:turquoise;
+       box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.1);
+       color:white;
+   }
    
 </style>

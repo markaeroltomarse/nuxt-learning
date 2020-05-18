@@ -6,8 +6,8 @@
 
      <div class="bg-light p-2">
          <p class="text-center text-secondary">{{fullname}}</p>
-         <p class="text-center">
-             <nuxt-link to="/"><i class="fas fa-sign-out-alt text-secondary mr-2" @click="logout"></i></nuxt-link>
+         <p class="text-center hovering">
+             <n-link to="/logout"><i    class="fas fa-sign-out-alt text-secondary mr-2" ></i></n-link>
 
              <nuxt-link to='/dashboard/profile'><i class="fas fa-expand text-secondary"></i></nuxt-link>
          </p>
@@ -25,16 +25,7 @@ export default {
         }
     },
     methods:{
-        async logout(){
-            this.$axios.get('/api/auth/logout')
-            .then(res => {
-                this.$emit('closeUserdrawer')
-                this.$store.commit('SET_AUTHENTICATED', false)
-                this.$store.commit('SET_USER', null)
-            })
-            .catch(err => console.log(err))
-            
-        }
+        
     },
 
     computed:{
@@ -46,11 +37,10 @@ export default {
             }
         }
     }
+
+
+
 }
-
-
-
-
 </script>
 
 <style scoped>
@@ -60,5 +50,11 @@ export default {
         top:10%;
         right:4%;
         width:15%;
+    }
+
+    .hovering i:hover{
+        color:teal;
+        transition:0.2s;
+        opacity:0.5;
     }
 </style>

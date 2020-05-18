@@ -1,8 +1,20 @@
+let date = new Date();
+let dd = String(date.getDate()).padStart(2, '0');
+let mm = date.getMonth(); //January is 0!
+let yyyy = date.getFullYear();
+
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"
+];
+
+
+
+
 export const strict = false
 
 export const state = () => ({
-    videos:[],
-    currentVideo:{},
+    
     authenticated:false,
 
     user:{
@@ -37,6 +49,10 @@ export const state = () => ({
 
 
 export const getters = {
+    today(){
+        let today = monthNames[mm] + '/' + dd + '/' + yyyy;
+        return today
+    },
     overview(state){
         return state.dashboard.postquiz.overviewNumbers
     },

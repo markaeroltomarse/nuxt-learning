@@ -3,7 +3,7 @@
 
       <overview/>
 
-      <div class="bg-white rounded shadow text-secondary" data-aos="zoom-in">
+      <div class="bg-white border rounded shadow text-secondary" data-aos="zoom-in">
           <div class="p-3 border-bottom bg-light rounded-top">
               {{subject.name}}: <strong>{{subject.code}}</strong>
           </div>
@@ -29,13 +29,42 @@
               <div class="px-5"  data-aos="fade-up" v-else>
                 <h4 class="text-center">Enter number of questions.</h4>
                 <div class=" p-2" style="margin:0px 20%;">
-                    <input type="number" class="form-control" v-model.lazy="numberQeustTxt">
+                    <v-text-field
+                        dense
+                        
+                        v-model.lazy="numberQeustTxt"
+                        outlined="true"
+                        type="number"
+                        class="text-center"
+                    >
+                        
+                    </v-text-field>
+
+                  
                 </div>
                 <h4 class="text-center mt-3">Enter Quiz infomation</h4>
                 <div class=" p-2" style="margin:0px 20%;">
-                    <input v-model="title" type="text" class="form-control my-1" placeholder="Quiz title">
-
-                    <input v-model="description" type="text" class="form-control my-1" placeholder="Quiz description">
+                    <v-text-field
+                        dense
+                        
+                        v-model="title"
+                        outlined="true"
+                        label="Quiz title"
+                        class="text-center"
+                    >
+                        
+                    </v-text-field>
+                    
+                    <v-textarea
+                        dense
+                        
+                        v-model="description"
+                        outlined="true"
+                        label="Short Descripton"
+                        class="text-center"
+                    >
+                        
+                    </v-textarea>
                     <h4 class="text-center mt-3"><i class="fas fa-clock"></i></h4>
                     <select v-model="timelimit" class="form-control text-center bg-white text-dark my-1">
                         <option selected :value="{val:0}">Select time limit</option>
@@ -55,32 +84,35 @@
                         <option :value="{val:3600000}">1 Hour</option>
                     </select>
 
-                    {{timelimit.val}}
                     
-                    <div class="text-info row my-1">
-                        <div class="col ">
-                            <client-only>
-                                <date-picker
-                                    class=" text-center"
-                                    placeholder="MM/DD/YYYY"
-                                    format="MM/dd/yyyy"
-                                    v-model="duedate" 
-                                />
-                            </client-only>
-                        </div>
-
-                        <div class="col">
-                            <input v-model="attemp" type="number" placeholder="Attemp" class="form-control" style="font-size:small;">
-                        </div>
+                    <v-subheader>Duedate</v-subheader>
+                    <div class=" ">
+                        <v-date-picker 
+                        color="teal"
+                        
+                        reactive="true"
+                        full-width
+                        :landscape="$vuetify.breakpoint.smAndUp"
+                        v-model="duedate">
+                        </v-date-picker><br>
+                       
+                        
                     </div>
-
-                   
+                    <v-text-field
+                        dense
+                        label="Attemp"
+                        v-model="attemp"
+                        outlined="true"
+                        type="number"
+                    >
+                        
+                    </v-text-field>
 
                     <button @click="generateQuestions" class="btn btn-info btn-block">OK</button>
                 </div>
 
                 <keep-alive>
-                    <div class="my-3" data-aos="zoom-out" v-if="settingType">
+                    <div class="my-3" v-if="settingType">
                         <h4 class="text-center mt-3">Setup each questions type.</h4>
                         <div class="row my-1" v-for="question in numberOfQuestions" :key="question">
                             <div class="col-3 ">
@@ -121,9 +153,12 @@ import enumeration from './enumeration'
 import essay from './essay'
 import overview from './overviewnumbers'
 
-
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 export default {
+    
     directives: {
         clickOutside: vClickOutside.directive
     },
@@ -136,7 +171,7 @@ export default {
             description:'',
             settingType:false,
             questionsPanel:false,
-            duedate:new Date(),
+            duedate:new Date().toISOString().substr(0, 10),
             timelimit:{
                 val:0
             },

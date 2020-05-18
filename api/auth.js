@@ -28,26 +28,33 @@ router.get('/user', async (req, res ) => {
 
 //LOGIN PROCESS
 router.post('/login', async (req, res) => {
-    let {email, password } = req.body
     //return res.status(200).json({msg:'Invalid login!', result:false})
-    try{
-        const login = await Users.find({email, password})
-        if(login.length > 0 ){
-            req.session.userId = login[0]._id
-            res.status(200).json({msg:'Login success!', result:true, user:login[0]})
-            return req.session.userId = login[0]._id
+    console.log(req.body)
+    let {email, password } = req.body
+
+    return await Users.findOne({email, password}, 'email password', (err, user) => {
+        if (err) return res.status(404).json({msg:'Login error: '+err})
+        // Prints "Space Ghost is a talk show host".
+        if(user != null ){
+            req.session.userId =user._id
+            res.status(200).json({msg:'Login success!', result:true, user:user})
+            return req.session.userId = user._id
         }
 
         return res.status(200).json({msg:'Invalid login!', result:false})
-    }catch(err){
-        return res.status(404).json({msg:'Login error: '+err})
-    }
+    });
+       
 })
 
 //LOGOUT PROCESS
 router.get('/logout', async (req, res) => {
     req.session.userId = ''
-    return res.status(200).json({msg:'Success Logout!', token:req.session.userId})
+    if(req.session.userId == ''){
+        req.session.userId = ''
+        return res.status(200).json({msg:'Success Logout!', token:req.session.userId})
+    }
+
+    res.sendStatus(404)
 })
 
 //KUNG MAY NAKA LOGIN NABA

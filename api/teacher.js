@@ -127,9 +127,11 @@ router.post('/master/course/subject', async (req, res) => {
     try{
         let subjects = await Subjects.find({_id:req.body.subID})
         if(subjects.length < 0){
-            return res.status(404).json({msg:ERR.UNDEFINED_SUBJECT, result:false})
+           
+            return res.status(404).json({msg:ERR.UNDEFINED_SUBJECT, result:false,})
         }
-        res.json({subject:subjects[0], result:true})
+        const quizes = await Quiz.find({'subject._id':req.body.subID})
+        res.json({subject:subjects[0], result:true, quizes})
     }catch(err){
         return res.sendStatus(404)
     }
@@ -208,14 +210,14 @@ router.post('/master/course/deptteacher', async (req, res) => {
 
 
 //ASSIGN NEW TEACHER INTO SUBJECT
-router.post('/master/course/subject/newteacherassign', async (req, res)=> {
+router.post('/master/course/subject/newteacherassign',   async (req, res)=> {
     // console.log(req.body)
     // console.log(req.body.subID)
     //return res.json({msg:`Teacher's assigned!`})
     try{
         let teachers = req.body.teachers
         teachers.forEach(async teacher => {
-            return await Subjects.update({_id:req.body.subID}, {$push:{assignTeachers:teacher._id }})
+            return await Subjects.updateOne({_id:req.body.subID}, {$push:{assignTeachers:teacher._id }})
         })
         return res.json({msg:`Teacher's assigned!`})
     }catch(err){
@@ -235,9 +237,19 @@ router.delete('/master/course/subject/deleteteacher', async (req, res) => {
     }
 })
 
+//KUKUNIN NATEN MGA QUIZES NG ISANG SUBJECT
+// router.post('/master/course/subject/subjectquizes', async (req, res) => {
+//     try{
+//         const quizes = await Quiz.find({'subject._id':req.body.subID})
+//         return res.json(quizes)
+//     }catch(err){
+//         return res.status(404).json({msg:err})
+//     }
+// })
+
 
 //SINGE FILE UPLOAD ROUTES
-router.post('/singleupload', async (req, res) => {
+router.post('/singleupload',  async (req, res) => {
 
     upload().single(req.query.fileref)(req, res, (error) => {
         if (error) {
@@ -257,7 +269,7 @@ router.post('/singleupload', async (req, res) => {
 })
 
 //FILE MULTIPLE UPLOADS ROUTES
-router.post('/multiupaload', async (req, res) => {
+router.post('/multiupaload',  async (req, res) => {
 
     upload().array(req.query.fileref)(req, res, (error) => {
         if (error) {
@@ -275,6 +287,9 @@ router.post('/multiupaload', async (req, res) => {
     return
     
 })
+
+//MIDDLEWARES FOR AUTHEN ACCESS API
+
 
 
 

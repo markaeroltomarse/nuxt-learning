@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
-let date = new Date()
+let date = new Date();
+let dd = String(date.getDate()).padStart(2, '0');
+let mm = date.getMonth(); //January is 0!
+let yyyy = date.getFullYear();
+
+
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+let today = monthNames[mm] + '/' + dd + '/' + yyyy;
+
 
 
 const users = mongoose.Schema({
@@ -42,7 +53,7 @@ const users = mongoose.Schema({
     },
     created:{
         type:String,
-        default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`
+        default:today
     },
     studentInfo:{
         section:{
@@ -100,7 +111,7 @@ const users = mongoose.Schema({
             },
             modified:{
                 type:String,
-                default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`,
+                default:today,
                 required:false,
             }
         }
@@ -137,7 +148,7 @@ const course = mongoose.Schema({
     },
     created:{
         type:String,
-        default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`
+        default:today
     }
 })
 
@@ -227,7 +238,7 @@ const quiz = mongoose.Schema({
     // }
     created:{
         type:String,
-        default:`${date.getFullYear() }/${date.getMonth()}/${date.getDate()}`,
+        default:today,
         required:false
     },
 
