@@ -6,14 +6,14 @@
             <div class="row">
                 <div class="col ">
                     <small>Enter questions <span class="text-danger">*</span></small> 
-                    <textarea @blur="isComplete" v-model="data.question" cols="30" rows="3" class="form-control">
+                    <textarea :readonly="editable" @blur="isComplete" v-model="data.question" cols="30" rows="3" class="form-control">
 
                     </textarea>
                 </div>
 
                 <div class="col ">
                     <small>Description </small> 
-                    <textarea @blur="isComplete" v-model="data.message" cols="30" rows="3" class="form-control">
+                    <textarea :readonly="editable" @blur="isComplete" v-model="data.message" cols="30" rows="3" class="form-control">
 
                     </textarea>
                 </div>
@@ -23,13 +23,13 @@
                 <input @blur="isComplete" v-model="data.correct" type="text" class="form-control border border-success" placeholder="Enter correct answer">
                 <div class="row  mt-3">
                     <div class="col">
-                        <input @blur="isComplete" v-model="data.wrong1" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
+                        <input :readonly="editable" @blur="isComplete" v-model="data.wrong1" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
                     </div>
                     <div class="col">
-                        <input @blur="isComplete" v-model="data.wrong2" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
+                        <input :readonly="editable" @blur="isComplete" v-model="data.wrong2" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
                     </div>
                     <div class="col">
-                        <input @blur="isComplete" v-model="data.wrong3" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
+                        <input :readonly="editable" @blur="isComplete" v-model="data.wrong3" type="text" class="form-control border border-danger" placeholder="Enter wrong answer">
                     </div>
                 </div>
             </div>
@@ -41,7 +41,8 @@
 export default {
     name:'Multiple',
     props:{
-        question:Object
+        question:Object,
+        editable:false,
     },
 
     data(){

@@ -1,15 +1,9 @@
 const mongoose = require('mongoose')
-let date = new Date();
-let dd = String(date.getDate()).padStart(2, '0');
-let mm = date.getMonth(); //January is 0!
-let yyyy = date.getFullYear();
+const moment = require('moment')
 
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-let today = monthNames[mm] + '/' + dd + '/' + yyyy;
+let today = moment().format('MMMM Do YYYY, h:mm:ss a');
+let yesterday =  moment().subtract(1, "days").format('MMMM Do YYYY, h:mm:ss a') - 1;
 
 
 
@@ -220,6 +214,11 @@ const quiz = mongoose.Schema({
     duedate:{
         type:String,
         required:false
+    },
+
+    datebelong:{
+        type:String,
+        required:false,
     },
 
     questions:{

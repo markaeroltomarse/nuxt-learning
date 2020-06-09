@@ -1,6 +1,6 @@
 
 const ERRORS = {
-    UNDEFINED_SUBJECT:'This subjects is undefined.'
+    UNDEFINED_SUBJECT:'This subject is undefined.'
 }
 
 module.exports = ERRORS

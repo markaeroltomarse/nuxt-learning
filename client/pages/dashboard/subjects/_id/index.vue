@@ -1,6 +1,9 @@
 <template>
   <div class="bg-light ">
       <dashDefault/>
+      <quizInfo 
+        
+      />
       <section class="subjectsPanel text-secondary py-3 " data-aos="fade-up">
           <h2><strong>Subject information</strong></h2>
 
@@ -50,21 +53,45 @@
 
 
           <div class="teachers-div shadow-sm" data-aos="fade-up">
-              <h4 class="text-center text-info">Teacher's</h4>
-              <div class="teachers-card ">
+              <carousel 
+            speed="300" 
+            :per-page="4" 
+            class="px-3 w-100 bg-light" 
+            paginationColor="turquoise" 
+            paginationActiveColor="teal">
+            <slide
+                
+                data-aos="flip-up"
+                
+                class="hoverSub my-3 mr-1"
+                
+                data-index="0"
+                data-name="MySlideName"
+                
+                :mouse-drag="true"
+            >
+                <div class="teacher-caru">
+                    <div class="coverteacher p-5">
+                        <!-- <img src="../../../../assets/uploads/subjectimg/4a7b1a8a-a971-454d-8ddf-8f2d2f18fd89.png" alt=""> -->
+                    </div>
 
-                  <div class=" rounded teacher-card" @mouseover="styleIt(subject._id)" @mouseout="normalStyle(subject._id)">
-                      <div class="p-2 ">
-                          <div  :ref="subject._id" class="teacherimg" :style="{backgroundImage:`url('${require(`../../../../assets/uploads/subjectimg/${subject.subimg}`)}')`}">
+                    <div>
+                        <strong>Mark Aerol tomarse</strong>
+                        <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro, nostrum quos neque iusto aperiam cum laborum nisi distinctio, totam maiores numquam mollitia optio quisquam perspiciatis similique non reprehenderit doloribus voluptates!</small>
+                    
+                       
 
-                          </div>
-                      </div>
-                      <div class="p-2 text-center border-top">
-                          <strong >Mark Aerol Tomarse</strong>
-                      </div>
-                  </div>
-
-              </div>
+                        <v-btn class="mb-1" color="primary" block small>
+                            Message
+                        </v-btn>
+                        <v-btn color="primary" block small>
+                            Visit
+                        </v-btn>
+                    </div>
+                </div>
+            </slide>
+              </carousel>
+              
               
           </div>
 
@@ -74,75 +101,53 @@
               <v-list :avatar="true">
                   <v-list-item-group>
                       <v-subheader color="teal">Earlier</v-subheader>
-                      <v-list-item class="postedfiles border-bottom">
-                          <v-list-item-action>
-                              <span class="badge badge-info">
-                                  Exam
-                              </span>
-                          </v-list-item-action>
-                          <v-list-item-content>
-                              <v-list-item-title>
-                                  Quiz 1 
-                              </v-list-item-title>
-                              <v-list-item-subtitle>
-                                  January 02, 2020
-                              </v-list-item-subtitle>
-                          </v-list-item-content>
-                          <v-list-item-action>
-                             
-                          </v-list-item-action>
-                          
-                      </v-list-item>
-
+                      <div v-for="quiz in quizes" :key="quiz._id">
+                          <Quiz
+                            
+                            v-if="today == quiz.created.split(',')[0]"
+                            :quiz="quiz"
+                            />
+                      </div>
+                      
                       <v-subheader color="teal">Yesterday</v-subheader>
-                      <v-list-item class="postedfiles border-bottom">
-                          <v-list-item-action>
-                              <span class="badge badge-info">
-                                  Exam
-                              </span>
-                          </v-list-item-action>
-                          <v-list-item-content>
-                              <v-list-item-title>
-                                  Quiz 1 
-                              </v-list-item-title>
-                              <v-list-item-subtitle>
-                                  January 02, 2020
-                              </v-list-item-subtitle>
-                          </v-list-item-content>
-                      </v-list-item>
-
+                      
+                      <div v-for="quiz in quizes" :key="quiz._id">
+                          <Quiz
+                            
+                            v-if="yesterday == quiz.created.split(',')[0]"
+                            :quiz="quiz"
+                            />
+                      </div>
 
                       <v-subheader color="teal">Others</v-subheader>
-                      <v-list-item class="postedfiles border-bottom">
-                          <v-list-item-action>
-                              <span class="badge badge-info">
-                                  Exam
-                              </span>
-                          </v-list-item-action>
-                          <v-list-item-content>
-                              <v-list-item-title>
-                                  Quiz 1 
-                              </v-list-item-title>
-                              <v-list-item-subtitle>
-                                  January 02, 2020
-                              </v-list-item-subtitle>
-                          </v-list-item-content>
-                      </v-list-item>
+                      <div v-for="quiz in quizes" :key="quiz._id">
+                          <Quiz
+                            
+                            v-if="yesterday != quiz.created.split(',')[0] & today != quiz.created.split(',')[0]"
+                            :quiz="quiz"
+                            />
+                      </div>
                   </v-list-item-group>
               </v-list>
           </div>
-
-          
-        
       </section>
   </div>
 </template>
 
 <script>
 import dashDefault from '../../../../components/dashboard'
+import Quiz from '../../../../components/dashboard/subjects/subject/quiz'
+import quizInfo from '../../../../components/dashboard/subjects/subject/expandsubject'
 
+import moment from 'moment'
 export default {
     middleware:['authen'],
+    data(){
+        return {
+            yesterday:this.moment().subtract(1, "days").format('MMMM Do YYYY'),
+            today:this.moment().format('MMMM Do YYYY')
+        }
+    },
     async asyncData({$axios, store, params, query}){
         try{
             store.dispatch('SET_USER')
@@ -152,14 +157,15 @@ export default {
             console.log(subjectinfo.data)
 
             return {
-                subject:subjectinfo.data.subject
+                subject:subjectinfo.data.subject,
+                quizes:subjectinfo.data.quizes
             }
         }catch(err){
             console.log(err)
         }
     },
     components:{
-        dashDefault
+        dashDefault, Quiz, quizInfo
     },
     methods:{
         styleIt(elem){
@@ -168,8 +174,18 @@ export default {
 
         normalStyle(elem){
             this.$refs[elem].style.border = '5px solid teal'
+        },
+        moment(){
+            return moment()
         }
+    },
+
+    created(){
+        console.log("June 1st 2020, 6:45:37 pm".split(","))
+
+        console.log(this.today == "June 1st 2020, 6:45:37 pm".split(",")[0])
     }
+
 }
 </script>
 
@@ -212,38 +228,7 @@ export default {
 
 }
 
-.teachers-card{
-    
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr 1fr;
-    grid-gap:10px;
-}
 
-.teacher-card{
-    transition:0.2s;
-    cursor:pointer;
-    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
-    color:teal;
-}
-
-.teacher-card:hover{
-    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);
-    transition:0.2s;
-    background-color:teal;
-    color:white;
-}
-
-.teacherimg {
-    background-size:100% 100%; background-position:center; background-repeat:no-repeat;
-    padding:27%;
-    border-radius:50%;
-    margin:2% 15%;
-    border:5px solid  teal;
-}
-.teacher-card:hover{
-    transition:0.2s;
-    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
-}
 .postedfiles{
     background-color:rgba(0,0,0,0.01);
     
@@ -253,6 +238,34 @@ export default {
     background-color:turquoise;
     color:white;
 }
+
+.teacher-caru{
+    background-color:white;
+    border-bottom:5px solid white;
+    box-shadow:0px 5px 10px 0px rgba(0,0,0,0.1);
+}
+
+.teacher-caru:hover{
+    border-bottom:5px solid turquoise;
+}
+
+
+
+.teacher-caru > div{
+    padding:1em;
+    text-align:center;
+    
+}
+
+.coverteacher{
+    background-color:#f2f2f2;
+    background-size:100%;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-image:url('../../../../assets/uploads/subjectimg/4a7b1a8a-a971-454d-8ddf-8f2d2f18fd89.png');
+    
+}
+
 
 
 

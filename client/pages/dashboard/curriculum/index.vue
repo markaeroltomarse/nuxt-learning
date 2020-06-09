@@ -13,7 +13,7 @@
     >
       Phasellus blandit leo ut odio. Morbi mattis ullamcorper velit. Donec orci lectus, aliquam ut, faucibus non, euismod id, nulla. In ut quam vitae odio lacinia tincidunt.
     </v-alert>
-        <v-banner single-line  class="mb-2">
+        <v-banner single-line class="mb-2">
             <v-icon
             slot="icon"
             color="warning"

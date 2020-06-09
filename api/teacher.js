@@ -5,7 +5,7 @@ const path = require('path')
 const uuid = require('uuid')
 var fs = require('fs');
 const ERR = require('../errors/teachersErr')
-
+const moment = require('moment')
 
 const router = express.Router()
 
@@ -14,7 +14,20 @@ const Quiz = models.Quiz
 const Course  = models.Course
 const Users = models.Users
 
+//DATE OPTIONS
+// let date = new Date();
+// let yesDd = String(date.getDate() - 1).padStart(2, '0');
+// let dd = String(date.getDate()).padStart(2, '0');
+// let mm = date.getMonth(); //January is 0!
+// let yyyy = date.getFullYear();
 
+
+// const monthNames = ["January", "February", "March", "April", "May", "June",
+//   "July", "August", "September", "October", "November", "December"
+// ];
+
+let today = moment().format('MMMM Do YYYY, h:mm:ss a');
+let yesterday =  moment().subtract(1, "days").format('MMMM Do YYYY, h:mm:ss a');
 
 
 function upload(){
@@ -130,7 +143,8 @@ router.post('/master/course/subject', async (req, res) => {
            
             return res.status(404).json({msg:ERR.UNDEFINED_SUBJECT, result:false,})
         }
-        const quizes = await Quiz.find({'subject._id':req.body.subID})
+        const quizes = await getSubjectQuizes(req.body.subID)
+        
         res.json({subject:subjects[0], result:true, quizes})
     }catch(err){
         return res.sendStatus(404)
@@ -237,7 +251,7 @@ router.delete('/master/course/subject/deleteteacher', async (req, res) => {
     }
 })
 
-//KUKUNIN NATEN MGA QUIZES NG ISANG SUBJECT
+// //KUKUNIN NATEN MGA QUIZES NG ISANG SUBJECT
 // router.post('/master/course/subject/subjectquizes', async (req, res) => {
 //     try{
 //         const quizes = await Quiz.find({'subject._id':req.body.subID})
@@ -288,7 +302,13 @@ router.post('/multiupaload',  async (req, res) => {
     
 })
 
-//MIDDLEWARES FOR AUTHEN ACCESS API
+//METHDOS
+
+let getSubjectQuizes = async (subID) => {
+    let quizes = await Quiz.find({'subject._id':subID})
+
+    return quizes
+}
 
 
 

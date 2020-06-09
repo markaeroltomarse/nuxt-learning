@@ -1,6 +1,11 @@
 <template>
     <div>
-        <carousel speed="300" :per-page="4" class="px-3 w-100 bg-light" paginationColor="turquoise" paginationActiveColor="teal">
+        <carousel 
+            speed="300" 
+            :per-page="4" 
+            class="px-3 w-100 bg-light" 
+            paginationColor="turquoise" 
+            paginationActiveColor="teal">
             <slide
 
                 

@@ -1,7 +1,11 @@
-export default async function ({$axios, store}){
+export default async function ({$axios, store, redirect}){
     
-    let check = await $axios.$get('/api/auth/exist')
+    try{
+        let check = await $axios.$get('/api/auth/exist')
 
-    store.commit('SET_AUTHENTICATED', check.result)
+        store.commit('SET_AUTHENTICATED', check.result)
+    }catch(err){
+        return redirect('/')
+    }
     
 }
