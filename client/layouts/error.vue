@@ -1,14 +1,14 @@
 <template>
-  <div class="container">
+  <div class="container bg-light">
     
 
 
     <div v-if="error.statusCode === 404" class=" p-2 text-center img-404" >
-        <img src="../assets/undraw/404.png" alt="" width="100%">
-
-        <h4 class="text-center" > 
-            <nuxt-link to="/"><strong class=" text-info" style="text-shadow: 0px 5px 10px 0px rgba(0,0,0,0.5);">Back to home page</strong></nuxt-link> 
-        </h4>
+        
+        <div style="margin:5% 20%; text-align:center;">
+          <nuxt-link to="/"><h4>Back to home page</h4></nuxt-link>
+          <img src="../assets/undraw/404.png" width="100%" alt="">
+         </div>
     </div>
   </div>
 </template>
@@ -22,6 +22,6 @@ export default {
 
 <style scoped>
     .img-404{
-        margin:10% 25%;
+        margin:5% 10%;
     }
 </style>

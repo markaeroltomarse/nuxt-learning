@@ -8,18 +8,25 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December"
 ];
 
-
+import io from 'socket.io-client'
 
 
 export const strict = false
 
 export const state = () => ({
-    
+    socket:null,
     authenticated:false,
-
     user:{
 
     },
+
+
+    userComponent:{
+        drawer:false
+    },
+
+    
+
     dashboard:{
         data:'',
         modulebtn:{
@@ -38,17 +45,33 @@ export const state = () => ({
             subject:{
                 config:null
             }
+        },
+
+        components:{
+            quizinfo:{
+                closeQuizstat:false,
+                quiz:0,
+                spinner:false,
+            }
         }
     },
     globalMessage:{
         msg:'',
         icon:'',
         type:''
-    }
+    },
+
 })
 
 
 export const getters = {
+    masterAuth(state){
+        try{
+            return (state.user._id == '5ebeb67c8628f6049069cc24')
+        }catch(err){
+            return false
+        }
+    },
     today(){
         let today = monthNames[mm] + '/' + dd + '/' + yyyy;
         return today
@@ -59,12 +82,20 @@ export const getters = {
 
     getFullnameUser(state){
         return state.user.fname + ' ' + state.user.lname
-    }
+    },
+
+    
+
+    
+
 }
 
 export const mutations = {
-
     
+
+    SET_DRAWER(state, val){
+        state.userComponent.drawer = val
+    },
 
     CALL_GLOBALMSG(state, info){
         state.globalMessage = info  
@@ -75,6 +106,7 @@ export const mutations = {
     },
 
     SET_AUTHENTICATED(state, result){
+        
         state.authenticated = result
     },
 
@@ -101,7 +133,7 @@ export const mutations = {
     
 
     SET_OVERVIEWS(state, arrNumbers){
-        console.table(arrNumbers)
+        
         state.dashboard.postquiz.overviewNumbers = arrNumbers
     },
 
@@ -114,8 +146,6 @@ export const mutations = {
                     numba.status = 'success'
                 }
             }
-
-            
         })
     },
 
@@ -124,7 +154,7 @@ export const mutations = {
             //numba.number == num & numba.status == 'danger'? numba.status = 'success' :numba.status = 'danger'
             if(numba.status == 'success'){
                 if(numba.number == num ){
-                    numba.data = {}
+                    numba.data = null
                     numba.status = 'danger'
                 }
             }
@@ -133,13 +163,19 @@ export const mutations = {
 
 
     REMIND_CONFIG(state, config){
-        console.log("CONFIG")
-        console.log(config)
         state.dashboard.master.subject.config = config
+    },
+
+    SET_SOCKET(state){
+        return state.socket = io('http://localhost:5000')
     }
+    
 }
 
 export const actions =  {
+    async SET_SOCKET({commit}, cb){
+        return await cb(commit('SET_SOCKET'))
+    },
     async SET_USER(context){
         let res = await this.$axios.get('/api/auth/user')
         let user = res.data
@@ -151,7 +187,13 @@ export const actions =  {
         setTimeout(() => {
             context.commit('CLOSE_GLOGBALMSG')
         }, 5000)
-    }
-    
+    },
+
+    SET_ELLIPSER(context, w){
+        return {
+            class:'text-nowrap d-block text-truncate',
+            w:'width:'+w
+        }
+    },
     
 }

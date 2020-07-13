@@ -14,6 +14,27 @@ router.get('/', async (req, res) => {
     }
 })
 
+//KUNIN ANG MULTIPLE SPECIFIC USERS
+router.post('/multipleuser', async (req, res) =>{
+    try{
+        let users = await Users.find({_id:req.body.users})
+        return res.json({data:users})
+    }catch(err){
+        return res.status(400).json({msg:err})
+    }
+})
+
+
+//KUNIN ANG ISANG USER 
+router.post('/user', async (req, res) =>{
+    try{
+        let user = await Users.findOne({_id:req.body.user})
+        return res.json({data:user})
+    }catch(err){
+        return res.status(400).json({msg:err})
+    }
+})
+
 //KUNIN ANG USER NA NAKA SESSION
 router.get('/user', async (req, res ) => {
 
@@ -40,6 +61,7 @@ router.post('/login', async (req, res) => {
             res.status(200).json({msg:'Login success!', result:true, user:user})
             return req.session.userId = user._id
         }
+        
 
         return res.status(200).json({msg:'Invalid login!', result:false})
     });

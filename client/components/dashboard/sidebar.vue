@@ -56,7 +56,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
     name:'sidebar',
     
@@ -65,14 +65,11 @@ export default {
             
             return this.$router.replace({path:route}).catch(err => console.log(err))
         },
-
-        masterAuth(){
-            try{
-                return (this.$store.state.user._id == '5ebeb67c8628f6049069cc24')
-            }catch(err){
-                return false
-            }
-        }
+        ...mapGetters([
+            'masterAuth'
+        ])
+        
+        
     },
 
     created(){

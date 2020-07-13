@@ -10,8 +10,32 @@
         
 
         <section class="subjectsPanel text-secondary py-3" data-aos="fade-up">
+            <div class="display-4 d-flex justify-content-between">
+                <div>
+                    <v-chip color="teal" v-ripple="{class:'text-light'}" class="text-light">
+                        Your Subject's
+                    </v-chip>
+                </div>
 
-            <h2 class=""><strong>Your subject's</strong> <n-link to='/dashboard/subjects/addnew'><button class="btn btn-outline-info float-right btn-sm">+</button></n-link></h2>
+                <div>
+                    <v-chip color="teal" v-ripple="{class:'text-light'}" class="text-light">
+                        Your Subject's
+                    </v-chip> 
+
+                    <v-chip color="teal" v-ripple="{class:'text-light'}" class="text-light">
+                        Your Subject's
+                    </v-chip> 
+
+                    <v-chip color="teal" v-ripple="{class:'text-light'}" class="text-light">
+                        Your Subject's
+                    </v-chip> 
+
+                    <v-chip color="teal" v-ripple="{class:'text-light'}" class="text-light">
+                        Your Subject's
+                    </v-chip> 
+                </div>
+            </div>  
+           
 
             <div class="subject bg-white mb-2 border-bottom" v-for="subject in subjects" :key="subject._id">
                 <div class="border-right">

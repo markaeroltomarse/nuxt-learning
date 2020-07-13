@@ -26,41 +26,39 @@
 
             
         </v-banner>
-          <div v-ripple="{ class: `text-info` }" v-for="course in courses" :key="course._id" class="course-panel bg-white shadow-sm mb-2">
+          <div v-ripple="{ class: `text-info` }" v-for="c in courses" :key="c.course._id" class="course-panel bg-white shadow-sm mb-2">
               <div>
                 <h4>
-                    <n-link :to="`/dashboard/curriculum/${course._id}`"><strong class="text-dark font-weight-black">{{course.name}}</strong> - <span class="text-secondaty">{{course.code}}</span></n-link>
+                    <n-link :to="`/dashboard/curriculum/${c.course._id}`"><strong class="text-dark font-weight-black">{{c.course.name}}</strong> - <span class="text-secondaty">{{c.course.code}}</span></n-link>
                 </h4>
                 
                 <div class="course-info">
                     <div class="bg-info rounded text-center p-2 text-light">
-                        <h2>60</h2>
+                        <h2>{{c.totalsub}}</h2>
                         <small class="font-weight-thin">SUBJECTS</small>
                     </div>
 
-                    <div class="bg-info rounded text-center p-2 text-light">
-                        <h2>60</h2>
-                        <small>SECTIONS</small>
-                    </div>
 
                     <div class="bg-info rounded text-center p-2 text-light">
-                        <h2>60</h2>
+                        <h2>{{c.totalenrolled}}</h2>
                         <small>STUDENTS</small>
                     </div>
 
-                    <div class="bg-info rounded text-center p-2 text-light">
-                        <h2>60</h2>
-                        <small>SUBJECTS</small>
-                    </div>
+                   
 
                     <div class="bg-info rounded text-center p-2 text-light">
-                        <h2>60</h2>
+                        <h2>{{c.totalteacher}}</h2>
                         <small>TEACHER</small>
+                    </div>
+
+                    <div class="bg-warning rounded text-center p-2 text-light">
+                        <h2>{{c.totalquiz}}</h2>
+                        <small>QUIZ</small>
                     </div>
                 </div>
               </div>
               <div>
-                  <img class=" " :src="require(`../../../assets/uploads/courseimg/${course.courseimg}`)" width="100%" alt="">
+                  <img class=" " :src="require(`../../../assets/uploads/courseimg/${c.course.courseimg}`)" width="100%" alt="">
               </div>
           </div>
 
@@ -92,10 +90,10 @@ export default {
     async asyncData({$axios, store}){
 
         try{
-            let courses = await $axios.get('/api/teacher/course')
+            let courses = await $axios.get('/api/teacher/master/courses')
             store.dispatch('SET_USER')
             store.commit('SET_ACTIVEMODULE', 'curriculum')
-            //console.log(courses.data)
+            console.log(courses.data)
             return {
                 courses:courses.data
             }
@@ -111,9 +109,8 @@ export default {
         handleSlideClick(){
             alert('fuck')
         },
-        countSubjects(subjects){
-            
-        }
+        
+
     }
 }
 </script>

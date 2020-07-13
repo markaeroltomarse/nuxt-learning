@@ -15,16 +15,16 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-                <div v-else class="my-2"  v-for="questpanel in numberOfQuestions" :key="questpanel">
+                <div v-else class="my-2"  v-for="(questpanel,index) in numberOfQuestions" :key="index + uuid()">
 
-                    <multiple v-if="questpanel.type === 'multi'"  v-bind:question="questpanel" />
-                    <enumeration v-if="questpanel.type === 'enum'" v-bind:question="questpanel"/>
-                    <essay v-if="questpanel.type === 'essay'" v-bind:question="questpanel"/>
+                    <multiple v-if="questpanel.type === 'multi'"  v-bind:one_question="questpanel" :editable="true" />
+                    <enumeration v-if="questpanel.type === 'enum'" v-bind:one_question="questpanel" :editable="true"/>
+                    <essay v-if="questpanel.type === 'essay'" v-bind:one_question="questpanel" :editable="true" />
                 </div>
               </div>
               
 
-
+    
 
               <div class="px-5"  data-aos="fade-up" v-else>
                 <h4 class="text-center">Enter number of questions.</h4>
@@ -33,7 +33,7 @@
                         dense
                         
                         v-model.lazy="numberQeustTxt"
-                        outlined="true"
+                        :outlined="true"
                         type="number"
                         class="text-center"
                     >
@@ -44,11 +44,12 @@
                 </div>
                 <h4 class="text-center mt-3">Enter Quiz infomation</h4>
                 <div class=" p-2" style="margin:0px 20%;">
+                    
                     <v-text-field
                         dense
                         
                         v-model="title"
-                        outlined="true"
+                        :outlined="true"
                         label="Quiz title"
                         class="text-center"
                     >
@@ -59,7 +60,7 @@
                         dense
                         
                         v-model="description"
-                        outlined="true"
+                        :outlined="true"
                         label="Short Descripton"
                         class="text-center"
                     >
@@ -68,20 +69,11 @@
                     <h4 class="text-center mt-3"><i class="fas fa-clock"></i></h4>
                     <select v-model="timelimit" class="form-control text-center bg-white text-dark my-1">
                         <option selected :value="{val:0}">Select time limit</option>
-                        <option :value="{val:300000}">5:00 Mins</option>
-                        <option :value="{val:480000}">8:00 Mins</option>
-                        <option :value="{val:600000}">10:00 Mins</option>
-                        <option :value="{val:720000}">12:00 Mins</option>
-                        <option :value="{val:900000}">15:00 Mins</option>
-                        <option :value="{val:480000}">20:00 Mins</option>
-                        <option :value="{val:1500000 }">25:00 Mins</option>
-                        <option :value="{val:1800000}">30:00 Mins</option>
-                        <option :value="{val:2100000 }">35:00 Mins</option>
-                        <option :value="{val:2400000 }">40:00 Mins</option>
-                        <option :value="{val:2700000 }">45:00 Mins</option>
-                        <option :value="{val:3000000 }">50:00 Mins</option>
-                        <option :value="{val:3300000 }">55:00 Mins</option>
-                        <option :value="{val:3600000}">1 Hour</option>
+                        <option :value="{val:'unlimitted'}">Unlimited</option>
+                        
+                        
+                        <option v-for="(val, index) in iterateTimelimit()" :key="index"   :value="{val:val.min}">{{val.lbl}} Mins</option>
+                        
                     </select>
 
                     
@@ -90,7 +82,7 @@
                         <v-date-picker 
                         color="teal"
                         
-                        reactive="true"
+                        :reactive="true"
                         full-width
                         :landscape="$vuetify.breakpoint.smAndUp"
                         v-model="duedate">
@@ -102,19 +94,19 @@
                         dense
                         label="Attemp"
                         v-model="attemp"
-                        outlined="true"
+                        :outlined="true"
                         type="number"
                     >
                         
                     </v-text-field>
 
-                    <button @click="generateQuestions" class="btn btn-info btn-block">OK</button>
+                    <v-btn @click="generateQuestions" block color="teal" class="text-light">OK</v-btn>
                 </div>
 
                 <keep-alive>
                     <div class="my-3" v-if="settingType">
                         <h4 class="text-center mt-3">Setup each questions type.</h4>
-                        <div class="row my-1" v-for="question in numberOfQuestions" :key="question">
+                        <div class="row my-1" v-for="(question, index) in numberOfQuestions" :key="index + uuid()">
                             <div class="col-3 ">
                                 Question {{question.number}}
                             </div>
@@ -129,15 +121,15 @@
                 </keep-alive>
 
                 <div class="text-right" v-if="settingType">
-                    <button @click="showQuestionsElement" class="btn btn-primary btn-sm mr-5">Create</button>
+                    <v-btn @click="showQuestionsElement" class="mr-5" color="primary">Create</v-btn>
                 </div>
               </div>
 
 
           </div>
           <div class="p-3 text-right border-top">
-              <button @click="closeQuizPost" class="btn btn-secondary mr-1">Close</button>
-              <button @click="pastQuizSubmit" v-if="questionsPanel" class="btn btn-primary ">Posts</button>
+              <v-btn @click="closeQuizPost" class="mr-1" color="dark">Close</v-btn>
+              <v-btn @click="pastQuizSubmit" v-if="questionsPanel" color="primary">Posts</v-btn>
           </div>
       </div>
   </section>
@@ -153,18 +145,26 @@ import enumeration from './enumeration'
 import essay from './essay'
 import overview from './overviewnumbers'
 
+
+import moment from 'moment'
+import uuid from 'uuid'
+
+
+
+
+
+
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
 
 export default {
     
-    directives: {
-        clickOutside: vClickOutside.directive
-    },
+    directives: { clickOutside: vClickOutside.directive, },
     name:'postQuiz',
     data(){
         return {
+            
             numberQeustTxt:0,
             numberOfQuestions:[],
             title:'',
@@ -177,7 +177,10 @@ export default {
             },
             attemp:'',
 
-            spinner:false
+            spinner:false,
+            
+            
+            descEditor:null,
             
         }
     },
@@ -188,14 +191,19 @@ export default {
         multiple,
         enumeration,
         essay,
-        overview
-        
+        overview,
+    
     },
-    async asyncData(){
-
-    },
+   
 
     methods:{
+        moment(){
+            return moment()
+        },
+
+        uuid(){
+            return uuid.v4()
+        },
         pastQuizSubmit(){
             //OPEN SPINNER TO AVOID SIDE ACTIONS
             this.spinner = true
@@ -214,8 +222,8 @@ export default {
             //GET QUESTIONS
             let final = []
             this.$store.getters['overview'].forEach(q => final.push(q.data))
-            
 
+            final.forEach(q => q['_id'] = this.uuid())
             //FINAL OBJECT HANDLER
             let finalObjquiz = {
                 subject:this.subject,
@@ -231,7 +239,7 @@ export default {
             //SEND TO API TO SAVE IN DATABASE.
             return  this.$axios.post('/api/teacher/subject/newquiz', {newquiz:finalObjquiz})
             .then(res => {
-                
+                console.log(final)
                 //CALL THE GLOBALL MESSAGE
                 this.$store.dispatch('CALL_GLOBALMSG', {
                     msg:res.data.msg,
@@ -302,20 +310,36 @@ export default {
                 this.questionsPanel = true
             }, 1500)
         },
-
-        
-
         ifActive(current, base){
             
             if(current == base) return 'active'
 
             return ''
-        }
-    },
+        },
 
-    created(){
-        
-    }
+
+        iterateTimelimit(){
+            let splt = 3600000 / 10
+            let f = []
+            
+            for(let i = 1; i <= 10; i++){
+                
+                f.push({
+                    min:splt * i,
+                    lbl:this.millisToMinutesAndSeconds(splt * i)
+                })
+            }
+
+            return f
+        },
+
+        millisToMinutesAndSeconds(millis) {
+            let minutes = Math.floor(millis / 60000);
+            var seconds = ((millis % 60000) / 1000).toFixed(0);
+            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        },
+
+    },   
 }
 </script>
 

@@ -2,12 +2,16 @@
     <div class="bg-light pt-3">
         <dashDefault/>
         <section class="documentBody px-0 bg-white text-secondary" data-aos="zoom-in">
-            <div v-if="spinner" class="text-center"  >
-                <div class="spinner-border text-info mx-auto" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
+            <div data-aos="fade-in" v-if="spinner" class="text-center"  style="padding:10% 27%;">
+                Please wait..
+                <v-progress-linear
+                    color="teal"
+                    indeterminate
+                    rounded
+                    height="6"
+                ></v-progress-linear>
             </div>
-            <form v-else @submit.prevent="newsubjectSubmit">
+            <form data-aos="fade-down" v-else @submit.prevent="newsubjectSubmit">
                 <h4 class="bg-info px-3 py-1 text-white"><strong>{{course.name}}</strong> - 
                 <span class="text-light">New subject in {{semester}} semester</span></h4>
 
@@ -22,12 +26,28 @@
                         <small><strong>Subject units:</strong></small>
                         <input v-model="units" type="number" class="form-control" required>
 
-                        <small><strong>Subject year:</strong></small>
-                        <select v-model="year" class="form-control" >
-                            <option selected :value="{val:''}">Select year</option>
-                            <option  :value="{val:'2020 - 2021'}">2020 - 2021</option>
-                            <option  :value="{val:'2021 - 2022'}">2021 - 2022</option>
-                        </select>
+                        
+                        <v-row>
+                            <v-col>
+                                <small><strong>Subject year:</strong></small>
+                                <select v-model="year" class="form-control" >
+                                    <option selected :value="{val:''}">Select year</option>
+                                    <option  :value="{val:'2020 - 2021'}">2020 - 2021</option>
+                                    <option  :value="{val:'2021 - 2022'}">2021 - 2022</option>
+                                </select>
+                            </v-col>
+                            <v-col>
+                                <small><strong>Student year:</strong></small>
+                                <v-text-field
+                                    solo
+                                    dense
+                                    v-model="studentyear"
+                                    readonly
+                                >
+
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
 
                         <small><strong>Description:</strong></small>
                         <textarea v-model="desc" class="form-control" cols="30" rows="5"></textarea>
@@ -44,8 +64,8 @@
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Optio, quas.</p>
                     </div>
                 </div>
-                <div class="text-center py-5 bg-light" >
-                    <button data-aos="fade-up" class="btn btn-info" @click="newsubjectSubmit">SUBMIT</button><br>
+                <div class="text-center bg-light py-5" >
+                    <button  class="btn btn-info" @click="newsubjectSubmit">SUBMIT</button><br>
                     <small  class="text-secondary">{{course.name}} - FIRST SEMESTER </small>
                 </div>
             </form>
@@ -57,7 +77,7 @@
 <script>
 
 import dashDefault from '../../../../components/dashboard'
-import path from 'path'
+
 export default {
     middleware:['authen', 'master'],
     components:{
@@ -77,6 +97,7 @@ export default {
                 val:''
             },
             desc:'',
+            studentyear:this.$route.query.y,
 
 
             selectedImg:null,
@@ -84,8 +105,9 @@ export default {
             selectedImgBg:'',
         }
     },
-    async asyncData({$axios, params, store}){
+    async asyncData({$axios, params, store, redirect}){
         store.dispatch('SET_USER')
+        
         try{
             let course = await $axios.post('/api/teacher/master/course', {courseID:params.id})
             if(course.data.error) return alert(course.data.error)
@@ -94,6 +116,9 @@ export default {
         }catch(err){
             alert(err)
         }
+    },
+    beforeMount(){
+        if(this.validateStudentYear() == 0) return this.$router.replace({path:`/dashboard/curriculum/${this.$route.params.id}`})
     },
     methods:{
         openFile(){
@@ -122,8 +147,9 @@ export default {
         },
         async newsubjectSubmit(){
             
+           
             this.spinner = true
-            if(this.code == '' | this.name == '' | this.units == '' | this.year.val == ''){
+            if(this.code == '' | this.name == '' | this.units == '' | this.year.val == '' | this.validateStudentYear() == 0){
                 this.spinner = false
                 return this.$store.dispatch('CALL_GLOBALMSG', {
                     type:'danger',
@@ -139,30 +165,26 @@ export default {
             
             
             // newsubimg.append('newsubimg', {course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc})
-            try{
-                let newsubimg = new FormData()
-                newsubimg.append('newsubimg', this.selectedImg)
-                let subimgres = await this.$axios.post('/api/teacher/singleupload?dest=subjectimg&fileref=newsubimg', newsubimg)
-                this.$store.dispatch('CALL_GLOBALMSG', {
-                    type:'success',
-                    icon:'fa-exclamation-circle',
-                    msg:subimgres.data.msg
-                })
-                let subinfos = await this.$axios.post('/api/teacher/course/subject/newsubject/', {course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc, subimg:subimgres.data.imagetoken})
+            let newsubimg = new FormData()
+            newsubimg.append('newsubimg', this.selectedImg)
+            
+            return await this.$axios.post('/api/teacher/singleupload?dest=subjectimg&fileref=newsubimg', newsubimg)
+            .then(async res => {
+                let subinfos = await this.$axios.post('/api/teacher/course/subject/newsubject/', {course:this.courseID, sem:this.semester, code: this.code, name:this.name, units:this.units, year:this.year.val, desc:this.desc, studentyear:this.studentyear, subimg:res.data.imagetoken})
                 this.$store.dispatch('CALL_GLOBALMSG', {
                     type:'success',
                     icon:'fa-exclamation-circle',
                     msg:subinfos.data.msg
                 })
-                return this.spinner = false
-            }catch(err){
-                this.$store.dispatch('CALL_GLOBALMSG', {
-                    type:'danger',
-                    icon:'fa-exclamation-circle',
-                    msg:err
-                })
-            }
+                this.spinner = false
+            })
+            .catch(err => console.log(err))
             
+        },
+
+        validateStudentYear(){
+            let y = this.$route.query.y
+            return (y == '1' | y == '2' | y == '3' | y == '4' )
         }
     }
 }

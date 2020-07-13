@@ -1,7 +1,7 @@
 <template>
     <div>
         <carousel 
-            speed="300" 
+            :speed="300" 
             :per-page="4" 
             class="px-3 w-100 bg-light" 
             paginationColor="turquoise" 
@@ -15,14 +15,14 @@
                 
                 class="hoverSub my-3 mr-1"
                 
-                data-index="0"
+                :data-index="0"
                 data-name="MySlideName"
                 
                 :mouse-drag="true"
 
                 @slideclick="directToSub(subject._id)">
-                <div>
-                    <img class="rounded-top" :src="require('../../../assets/uploads/subjectimg/'+subject.subimg)" width="100%" alt="">
+                <div class="rounded-top" :style="`padding:30% 0px; background-image:url('${require('../../../assets/uploads/subjectimg/'+subject.subimg)}')`" >
+                    <!-- <img class="rounded-top" :src="" width="100%" alt=""> -->
                 </div>
 
                 <div class="p-2">
@@ -76,4 +76,12 @@ export default {
     background-color:white;
     color:teal;
 }
+
+.hoverSub > div{
+    background-size:100%;
+    background-repeat:no-repeat;
+    background-position:center;
+    
+}
+
 </style>

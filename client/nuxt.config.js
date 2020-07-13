@@ -14,7 +14,7 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: "stylesheet", type: "text/css", href: "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" },
-      { rel: "stylesheet", type: "text/css", href:'https://unpkg.com/aos@2.3.1/dist/aos.css'}
+      { rel: "stylesheet", type: "text/css", href:'https://unpkg.com/aos@2.3.1/dist/aos.css'},    
     ],
     script:[
       { src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js' },
@@ -38,11 +38,13 @@ export default {
     { src: "@/plugins/vClickOutside", ssr: false },
     { src: '~/plugins/vue-datepicker', ssr: false },
     { src: '~/plugins/vuecarousel', ssr: false },
+    {src:'~/plugins/vue-socket.js', ssr:false},
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
+    
   ],
   /*
   ** Nuxt.js modules
@@ -51,22 +53,24 @@ export default {
     // Doc: https://bootstrap-vue.js.org
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
-    ['@nuxtjs/vuetify', { /* module options */ }]
+    ['@nuxtjs/vuetify', { 
+      icons: {
+        iconfont: 'mdi', // default - only for display purposes
+      },
+     }],
+    
 
     //['bootstrap-vue/nuxt', { css: false }],
   ],
 
+ 
+
   axios: {
-    //proxyHeaders: true,
-    // proxy:true,
-    // debug:true,
+    
     credentials: true,
     baseURL:'http://localhost:5000'
   },
 
-  auth:{
-    
-  },
   
   /*
   ** Build configuration

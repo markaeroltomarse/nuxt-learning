@@ -2,9 +2,16 @@ const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
 const mongoose = require('mongoose')
-const path = require('path')
+
+
 
 const app = express()
+
+
+//INITIALIZING SERVER AND SOCKET
+
+var server = require('http').createServer(app);  
+var io = require('socket.io')(server);
 
 
 //Env Config
@@ -65,9 +72,24 @@ app.use('/api/teacher', teacher)
 
 const port = process.env.PORT || 5000
 
-app.listen(port, () => {
-    console.log(`Server listening in port ${port}`)
-})
+// Handle connection
+io.on('connection', (socket) => {
+    
+    console.log('Client connected...');
+    //socket.emit('newMessage', 'Hello from server');
+
+    socket.on('client_greetings', data => {
+        socket.emit('server_greetings', data)
+    })
+    socket.on('notify_server', data => {
+        socket.emit('greetings', data)
+    })
+   
+});
+
+//AND START THE SERVER
+server.listen(port, () => console.log('Server listening on port '+port))
+
 
 
 

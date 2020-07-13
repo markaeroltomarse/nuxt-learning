@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <nav class="navbar bg-white shadow-sm px-5 py-2 text-light d-flex justify-content-between position-fixed">
       
       <nuxt-link to="/" class="" style="width:20%;">
@@ -30,8 +31,16 @@
       </div>
     </nav>
     
-    <userDrawer v-click-outside="outClick" v-if="drawer" data-aos="fade-down" v-on:closeUserdrawer="outClick"/>
+    <userDrawer v-click-outside="outClick" v-if="this.$store.state.userComponent.drawer" data-aos="fade-down" v-on:closeUserdrawer="outClick"/>
     
+
+
+
+
+
+
+
+
     <client-only>
       <div v-if="this.$store.state.globalMessage.msg != ''" :class="`rounded shadow  bg-${this.$store.state.globalMessage.type} text-white globalMessage `" data-aos="fade-up">
       <div class="text-center my-4">
@@ -47,18 +56,18 @@
     <v-app>
        <section class="mainBody h-auto " >
       
-        <nuxt app/>
+        <nuxt v-on:closeUserdrawer="outClick" app/>
       </section>
     </v-app>
   </div>
 </template>
 
 <script>
-// import '../plugins/particles/particles'
-// import '../plugins/particles/app'
+
 
 import userDrawer from './userDrawer'
 import vClickOutside from 'v-click-outside'
+
 
 export default {
   
@@ -67,7 +76,8 @@ export default {
   },
   data(){
     return {
-      drawer:false
+      drawer:false,
+
     }
   },
   
@@ -76,31 +86,54 @@ export default {
   },
   methods:{
       outClick(){
-          if(this.drawer == true){
-              this.drawer = false
+          if(this.$store.state.userComponent.drawer == true){
+              this.$store.commit('SET_DRAWER', false)
           }
       },
 
       openDrawer(){
-        this.drawer = true
+        this.$store.state.userComponent.drawer = true
       },
 
       fullname(){
         try{
           return this.$store.state.user.fname + ' ' + this.$store.state.user.lname
         }catch(err){
-          console.log(err)
+          //console.log(err)
         }
       },
+
+
+
+
+      loadQuizes(){
+        let {allquizes} = this.GET_SUBJECTINFO()
+
+        return this.SET_QUIZINFO(allquizes)
+      },
+
+      
+
   },
 
-  computed:{
-    
+  async mounted(){
+    return await this.$store.dispatch('SET_SOCKET', socket => {
+
+      this.$store.state.socket.on('server_greetings', data => {
+        console.log(data)
+      })
+
+    })
   },
 
   created(){
     //console.log(JSON.stringify(this.user))
-  }
+    if(!this.$nuxt.isOnline) return this.error.statusCode = 404
+
+    
+    
+  },
+ 
 }
 </script>
 
@@ -198,12 +231,12 @@ nav{
 
 
 .overlay{
-  width:100vw;
-  height:100vh;
-  position: fixed;
+  width:100vw !important;
+  height:100vh !important;
+  position: fixed !important;
   top:0;
   left: 0;
   transition:0.2s;
-  z-index:30;
+  z-index:50;
 }
 </style>

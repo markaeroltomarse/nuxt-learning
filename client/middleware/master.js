@@ -1,4 +1,4 @@
-export default async ({$axios, store, redirect, $route}) => {
+export default async ({$axios, store, redirect, path}) => {
     //PARA LANG SA MGA MASTER
     if(store.state.user._id != '5ebeb67c8628f6049069cc24'){
         //return redirect('/dashboard/subjects')
@@ -9,7 +9,7 @@ export default async ({$axios, store, redirect, $route}) => {
             store.state.user = check.user
             // console.log("FROM MASTER MIDDLEWARE")
             // console.log(store.state.user)
-            return redirect('/dashboard')
+            return redirect(path)
         }else{
             return redirect('/login')
         }
