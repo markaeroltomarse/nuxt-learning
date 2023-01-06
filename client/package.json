@@ -17,7 +17,7 @@
     "aos": "^2.3.4",
     "bootstrap-vue": "^2.0.0",
     "moment": "^2.26.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "socket.io-client": "^2.3.0",
     "v-click-outside": "^3.0.1",
     "vue-carousel": "^0.18.0",
